@@ -157,6 +157,39 @@
         </section>
 
         <section class="slide-section" id="slide-4">
+            <div class="max-w-4xl z-10 w-full md:w-1/2">
+                <span class="text-purple-400 text-sm font-semibold tracking-widest uppercase mb-3 block">Análise de Mercado</span>
+                <h2 class="text-3xl md:text-5xl font-bold mb-8">Por que o <span class="text-gradient">WeDo</span> se destaca?</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="glass-card p-5 flex flex-col items-center text-center border-t border-t-purple-500/40 hover:-translate-y-2 transition-transform duration-300">
+                        <img src="assets/habitica.png" alt="Habitica" class="w-14 h-14 object-contain mb-3 rounded-xl opacity-80">
+                        <h3 class="font-bold text-white mb-2 text-base">vs. Habitica</h3>
+                        <p class="text-blue-100/60 text-[11px] font-light leading-relaxed">
+                            Eles focam num RPG complexo e pixelado. Nós priorizamos uma <strong>auditoria real e validação social (D-1)</strong> com uma interface limpa e focada no mundo moderno.
+                        </p>
+                    </div>
+
+                    <div class="glass-card p-5 flex flex-col items-center text-center border-t border-t-red-500/40 hover:-translate-y-2 transition-transform duration-300">
+                        <img src="assets/todoist.png" alt="Todoist" class="w-14 h-14 object-contain mb-3 rounded-xl opacity-80">
+                        <h3 class="font-bold text-white mb-2 text-base">vs. Todoist</h3>
+                        <p class="text-blue-100/60 text-[11px] font-light leading-relaxed">
+                            Listas de tarefas comuns são facilmente ignoradas. O WeDo transforma o checklist em <strong>gamificação nativa</strong>, gerando senso de comunidade.
+                        </p>
+                    </div>
+
+                    <div class="glass-card p-5 flex flex-col items-center text-center border-t border-t-orange-500/40 hover:-translate-y-2 transition-transform duration-300">
+                        <img src="assets/gymrats.png" alt="Gymrats" class="w-14 h-14 object-contain mb-3 rounded-xl opacity-80">
+                        <h3 class="font-bold text-white mb-2 text-base">vs. Gymrats</h3>
+                        <p class="text-blue-100/60 text-[11px] font-light leading-relaxed">
+                            Ao invés de nichar apenas em musculação e fitness, o WeDo é um <strong>ecossistema expansível</strong> para estudos, saúde mental e qualquer rotina.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="slide-section" id="slide-5">
             <div class="max-w-4xl z-10">
                 <span class="text-yellow-400 text-sm font-semibold tracking-widest uppercase mb-3 block">A Tecnologia por Trás</span>
                 <h2 class="text-3xl md:text-4xl font-bold mb-6">Performance e Inteligência Artificial</h2>
@@ -180,7 +213,7 @@
             </div>
         </section>
 
-        <section class="slide-section" id="slide-5">
+        <section class="slide-section" id="slide-6">
             <div class="max-w-3xl z-10 md:w-1/2 flex flex-col gap-3">
                 <div>
                     <span class="text-orange-400 text-sm font-semibold tracking-widest uppercase mb-3 block">Nosso Símbolo e Assistente IA</span>
@@ -189,15 +222,14 @@
                         O Tiktaalik é um fóssil de transição, marcando o momento histórico em que a vida começou a sair da água para a terra firme. Para nós, ele simboliza <strong>evolução, adaptação e a coragem de sair da zona de conforto</strong> — exatamente a jornada dos nossos usuários. Ele é o rosto da nossa Inteligência Artificial, pronto para te guiar nessa evolução.
                     </p>
                 </div>
-                    <div class="relative mt-8 flex justify-center md:justify-center">
-                        <div class="absolute w-60 h-60 bg-orange-500/20 blur-[80px] rounded-full"></div>
-                        
-                        <img src="assets/Tiktaalik.png" alt="Mascote Tiktaalik" class="relative z-10 h-40 md:h-56 object-contain drop-shadow-[0_15px_15px_rgba(0,0,0,0.4)] hover:scale-105 transition-transform duration-500">
-                    </div>
+                <div class="relative mt-8 flex justify-center md:justify-center">
+                    <div class="absolute w-60 h-60 bg-orange-500/20 blur-[80px] rounded-full"></div>
+                    <img src="assets/Tiktaalik.png" alt="Mascote Tiktaalik" class="relative z-10 h-40 md:h-56 object-contain drop-shadow-[0_15px_15px_rgba(0,0,0,0.4)] hover:scale-105 transition-transform duration-500">
                 </div>
+            </div>
         </section>
 
-        <section class="slide-section" id="slide-6">
+        <section class="slide-section" id="slide-7">
             <div class="max-w-4xl z-10 w-full">
                 <span class="text-teal-400 text-sm font-semibold tracking-widest uppercase mb-2 block">Criadores</span>
                 <h2 class="text-3xl font-bold mb-8">Corpo de Engenharia - LYMTT</h2>
@@ -230,7 +262,8 @@
                 </div>
             </div>
         </section>
-        <section class="slide-section" id="slide-7">
+
+        <section class="slide-section" id="slide-8">
             <div class="max-w-2xl z-10 text-center">
 
                 <h2 class="text-5xl md:text-6xl font-extrabold mb-4">
@@ -276,7 +309,7 @@
 
         let scene, camera, renderer, phoneGroup;
         let activeIndex = 0;
-        const totalSlides = 8; 
+        const totalSlides = 9; // <--- Atualizado para 9 slides
         let isTransitioning = false;
         let spinCount = 0; 
 
