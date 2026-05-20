@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>WeDo Pitch Deck - Interactive Experience</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <style>
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #050b14; 
+            background-image: 
+                radial-gradient(circle at 10% 0%, rgba(59, 130, 246, 0.15) 0%, transparent 50%), 
+                radial-gradient(circle at 90% 100%, rgba(34, 197, 94, 0.12) 0%, transparent 50%);
+            background-attachment: fixed;
+            color: white;
+            overflow: hidden;
+        }
+
+        #deck-container {
+            width: 100%; height: 100%; position: relative;
+        }
+
+        .slide-section {
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%; display: flex;
+            align-items: center; padding: 4% 6%;
+            opacity: 0; visibility: hidden; z-index: 5;
+            box-sizing: border-box;
+        }
+
+        #webgl-container {
+            position: fixed; top: 0; right: 0;
+            width: 50%; height: 100%; z-index: 2;
+            pointer-events: none; transition: width 0.5s ease;
+        }
+
+        @media (max-width: 1024px) {
+            #webgl-container { width: 100%; }
+            .slide-section {
+                flex-direction: column; justify-content: flex-start;
+                align-items: center; padding-top: 12vh; text-align: center;
+            }
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #3b82f6 0%, #22c55e 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        
+        .text-gradient-orange {
+            background: linear-gradient(135deg, #f97316 0%, #eab308 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        .glass-card {
+            background: rgba(10, 15, 30, 0.6);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 28px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 10px; }
+
+        .dot-nav p { opacity: 0; transform: translateX(10px); transition: all 0.3s ease; }
+        .dot-nav:hover p { opacity: 1; transform: translateX(0); }
+    </style>
+</head>
+<body>
+
+    <div id="loading-screen" class="fixed inset-0 bg-[#050b14] z-[9999] flex flex-col justify-center items-center">
+        <div class="w-12 h-12 border-4 border-blue-500/20 border-t-green-500 rounded-full animate-spin mb-4"></div>
+        <p class="text-gray-500 text-xs tracking-widest uppercase font-semibold">Carregando Ecossistema WeDo...</p>
+    </div>
+
+    <div id="webgl-container"></div>
+
+    <div class="fixed top-6 left-8 z-50 flex items-center gap-3">
+        <img src="assets/Logo WeDo.png" alt="Logo WeDo" class="h-8 w-auto object-contain">
+        <span class="text-xs text-blue-300/50 font-mono hidden md:block">LYMTT(2026)</span>
+    </div>
+
+    <div class="fixed right-8 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-4" id="side-pagination"></div>
+
+    <div id="deck-container">
+        
+        <section class="slide-section" id="slide-0">
+            <div class="max-w-2xl z-10 md:w-1/2">
+                <span class="text-blue-400 text-sm font-semibold tracking-widest uppercase mb-4 block drop-shadow-md">LYMTT Technology apresenta</span>
+                <div class="mb-6 md:mb-8">
+                    <img src="assets/Logo WeDo.png" alt="Logo Oficial WeDo" class="h-20 md:h-28 w-auto object-contain drop-shadow-[0_0_20px_rgba(59,130,246,0.4)]" id="logo-oficial">
+                </div>
+                <h2 class="text-2xl md:text-3xl font-semibold mb-6 text-white/95 drop-shadow-sm">Conectando pessoas. <br>Multiplicando conquistas.</h2>
+                <p class="text-lg text-blue-100/70 font-light max-w-lg mb-8">
+                    A plataforma gamificada de formação de hábitos focada em comunidade e validação real.
+                </p>
+            </div>
+        </section>
+
+        <section class="slide-section" id="slide-1">
+            <div class="max-w-2xl z-10 md:w-1/2">
+                <span class="text-red-400 text-sm font-semibold tracking-widest uppercase mb-3 block">O Desafio Diário</span>
+                <h2 class="text-3xl md:text-5xl font-bold mb-6">Mentes sobrecarregadas, rotinas sem constância.</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+                    <div class="glass-card p-6">
+                        <div class="text-2xl mb-2">🧠</div>
+                        <h3 class="font-bold text-white mb-2">Falta de Foco</h3>
+                        <p class="text-blue-100/60 text-xs font-light leading-relaxed">Dificuldade crônica em manter a disciplina e constância em metas e objetivos puramente pessoais.</p>
+                    </div>
+                    <div class="glass-card p-6 border-t border-t-red-500/20">
+                        <div class="text-2xl mb-2">📱</div>
+                        <h3 class="font-bold text-white mb-2">Erosão Social</h3>
+                        <p class="text-blue-100/60 text-xs font-light leading-relaxed">Grupos criados em apps como o WhatsApp perdem tração rapidamente por falta de validação dinâmica e recompensas.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="slide-section" id="slide-2">
+            <div class="max-w-2xl z-10 md:w-1/2">
+                <span class="text-green-400 text-sm font-semibold tracking-widest uppercase mb-3 block">A Solução Científica</span>
+                <h2 class="text-3xl md:text-5xl font-bold mb-6">Psicologia Comportamental + Gamificação</h2>
+                <p class="text-blue-100/80 text-sm font-light leading-relaxed mb-6">
+                    Baseado nos princípios de <strong class="text-white">B.F. Skinner (1938)</strong>, recompensas imediatas e recorrentes fortalecem a formação de hábitos benéficos e estimulam a repetição contínua de comportamentos desejados, utilizando fundamentos da psicologia comportamental aliados a mecânicas de jogo para tornar o desenvolvimento de hábitos mais leve, motivador e contínuo.
+                </p>
+                <div class="glass-card p-6 border-l-4 border-l-green-500">
+                    <p class="text-xs font-mono text-green-200/80 italic">O WeDo é mais do que uma ferramenta de produtividade. É um sistema de motivação coletiva criado para mostrar que, com engajamento e propósito, evoluir pode ser algo divertido.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="slide-section" id="slide-3">
+            <div class="max-w-3xl z-10 md:w-1/2">
+                <span class="text-blue-400 text-sm font-semibold tracking-widest uppercase mb-3 block">Mecânicas da Plataforma</span>
+                <h2 class="text-3xl md:text-5xl font-bold mb-8">Duas formas complementares de evoluir.</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="glass-card p-6 border border-blue-500/30 shadow-[0_0_20px_rgba(59,130,246,0.1)]">
+                        <div class="font-bold text-xl text-blue-400 mb-2">Modo Colaborativo</div>
+                        <p class="text-blue-100/70 text-xs font-light leading-relaxed mb-4">Ações individuais impulsionam o progresso de todo o grupo. Ou seja, a falha de um membro zera a ofensiva e reduz pela metade o XP acumulado pela equipe.</p>
+                    </div>
+                    <div class="glass-card p-6 border border-green-500/30 shadow-[0_0_20px_rgba(34,197,94,0.1)]">
+                        <div class="font-bold text-xl text-green-400 mb-2">Modo Competitivo</div>
+                        <p class="text-blue-100/70 text-xs font-light leading-relaxed">Estimula a performance individual de alto rendimento através do acúmulo de XP, subida de níveis e visualização em tempo real de quadros de liderança (Rankings).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="slide-section" id="slide-4">
+            <div class="max-w-4xl z-10">
+                <span class="text-yellow-400 text-sm font-semibold tracking-widest uppercase mb-3 block">A Tecnologia por Trás</span>
+                <h2 class="text-3xl md:text-4xl font-bold mb-6">Performance e Inteligência Artificial</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="glass-card p-5">
+                        <div class="text-xs font-mono text-blue-400 uppercase tracking-wider mb-2">Front-End Experience</div>
+                        <p class="text-white font-bold text-base mb-1">Angular & PWA</p>
+                        <p class="text-blue-100/60 text-xs font-light">Desenvolvimento Web Responsivo com experiência de navegação nativa e fluida, sem a necessidade de downloads pesados.</p>
+                    </div>
+                    <div class="glass-card p-5">
+                        <div class="text-xs font-mono text-green-400 uppercase tracking-wider mb-2">Core & Data</div>
+                        <p class="text-white font-bold text-base mb-1">NestJS & PostgreSQL</p>
+                        <p class="text-blue-100/60 text-xs font-light">Arquitetura robusta, escalável e segura para processar validações cruzadas e garantir a integridade dos desafios diários.</p>
+                    </div>
+                    <div class="glass-card p-5 border border-purple-500/40 bg-purple-900/10">
+                        <div class="text-xs font-mono text-purple-400 uppercase tracking-wider mb-2">Assistência IA</div>
+                        <p class="text-white font-bold text-base mb-1">Integração Inteligente</p>
+                        <p class="text-purple-100/70 text-xs font-light">Nosso assistente virtual é impulsionado por Inteligência Artificial, dedicado a tirar dúvidas e dar suporte contínuo de forma humanizada.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="slide-section" id="slide-5">
+            <div class="max-w-3xl z-10 md:w-1/2 flex flex-col gap-3">
+                <div>
+                    <span class="text-orange-400 text-sm font-semibold tracking-widest uppercase mb-3 block">Nosso Símbolo e Assistente IA</span>
+                    <h2 class="text-3xl md:text-5xl font-bold mb-4">Por que o <span class="text-gradient-orange">Tiktalik?</span></h2>
+                    <p class="text-blue-100/70 text-sm font-light leading-relaxed mb-6">
+                        O Tiktaalik é um fóssil de transição, marcando o momento histórico em que a vida começou a sair da água para a terra firme. Para nós, ele simboliza <strong>evolução, adaptação e a coragem de sair da zona de conforto</strong> — exatamente a jornada dos nossos usuários. Ele é o rosto da nossa Inteligência Artificial, pronto para te guiar nessa evolução.
+                    </p>
+                </div>
+                    <div class="relative mt-8 flex justify-center md:justify-center">
+                        <div class="absolute w-60 h-60 bg-orange-500/20 blur-[80px] rounded-full"></div>
+                        
+                        <img src="assets/Tiktaalik.png" alt="Mascote Tiktaalik" class="relative z-10 h-40 md:h-56 object-contain drop-shadow-[0_15px_15px_rgba(0,0,0,0.4)] hover:scale-105 transition-transform duration-500">
+                    </div>
+                </div>
+        </section>
+
+        <section class="slide-section" id="slide-6">
+            <div class="max-w-4xl z-10 w-full">
+                <span class="text-teal-400 text-sm font-semibold tracking-widest uppercase mb-2 block">Criadores</span>
+                <h2 class="text-3xl font-bold mb-8">Corpo de Engenharia - LYMTT</h2>
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                    <div class="glass-card p-4 text-center hover:bg-blue-900/20 transition-colors">
+                        <div class="w-12 h-12 rounded-full bg-blue-500/10 border border-blue-500/30 flex items-center justify-center mx-auto mb-3 font-bold text-lg text-blue-400">L</div>
+                        <p class="text-white font-semibold text-xs truncate">Larissa Oliveira</p>
+                        <p class="text-[10px] text-blue-200/60 font-mono mt-1">Tech Writer / Software Eng.</p>
+                    </div>
+                    <div class="glass-card p-4 text-center hover:bg-green-900/20 transition-colors">
+                        <div class="w-12 h-12 rounded-full bg-green-500/10 border border-green-500/30 flex items-center justify-center mx-auto mb-3 font-bold text-lg text-green-400">Y</div>
+                        <p class="text-white font-semibold text-xs truncate">Yasmim Lira</p>
+                        <p class="text-[10px] text-green-200/60 font-mono mt-1">Tech Writer / QA</p>
+                    </div>
+                    <div class="glass-card p-4 text-center hover:bg-purple-900/20 transition-colors">
+                        <div class="w-12 h-12 rounded-full bg-purple-500/10 border border-purple-500/30 flex items-center justify-center mx-auto mb-3 font-bold text-lg text-purple-400">M</div>
+                        <p class="text-white font-semibold text-xs truncate">Marcelo Arruda</p>
+                        <p class="text-[10px] text-purple-200/60 font-mono mt-1">Software Eng. / Designer</p>
+                    </div>
+                    <div class="glass-card p-4 text-center hover:bg-teal-900/20 transition-colors">
+                        <div class="w-12 h-12 rounded-full bg-teal-500/10 border border-teal-500/30 flex items-center justify-center mx-auto mb-3 font-bold text-lg text-teal-400">T</div>
+                        <p class="text-white font-semibold text-xs truncate">Thialy Lima</p>
+                        <p class="text-[10px] text-teal-200/60 font-mono mt-1">Software Eng. / Designer</p>
+                    </div>
+                    <div class="glass-card p-4 text-center hover:bg-yellow-900/20 transition-colors">
+                        <div class="w-12 h-12 rounded-full bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center mx-auto mb-3 font-bold text-lg text-yellow-400">T</div>
+                        <p class="text-white font-semibold text-xs truncate">Thailan Sousa</p>
+                        <p class="text-[10px] text-yellow-200/60 font-mono mt-1">PO / Software Eng.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="slide-section" id="slide-7">
+            <div class="max-w-2xl z-10 text-center md:text-left">
+                <h2 class="text-5xl md:text-6xl font-extrabold mb-4">Transforme rotinas em <span class="text-gradient">vitórias.</span></h2>
+                <p class="text-blue-100/80 text-sm font-light mb-8 max-w-md mx-auto md:mx-0">
+                    Experimente uma aplicação intuitiva e projetada para incentivar o engajamento humano de forma natural e contínua.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                    <a href="https://wedo-lymtt.vercel.app/" target="_blank" class="bg-gradient-to-r from-blue-500 to-green-500 text-black px-8 py-4 rounded-full font-bold text-sm shadow-[0_0_25px_rgba(34,197,94,0.4)] hover:shadow-[0_0_35px_rgba(34,197,94,0.6)] hover:scale-105 transition-all inline-flex items-center gap-2 justify-center">
+                        Acessar Plataforma Web
+                    </a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const useVideo = true; 
+        const appVideoUrl = 'assets/wedo-video.mp4'; 
+        const appImageUrl = 'MARCADOR_DO_SEU_PRINT_AQUI.jpg'; 
+
+        let scene, camera, renderer, phoneGroup;
+        let activeIndex = 0;
+        const totalSlides = 8; 
+        let isTransitioning = false;
+        let spinCount = 0; 
+
+        const baseConfig = { px: 0, py: -0.2, pz: 2.0, rx: 0.05, ry: -0.1, rz: 0 }; 
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initThreeJS();
+            buildPagination();
+            goToSlide(0);
+
+            setTimeout(() => {
+                gsap.to('#loading-screen', { opacity: 0, duration: 0.5, onComplete: () => document.getElementById('loading-screen').style.display = 'none' });
+            }, 800);
+
+            window.addEventListener('wheel', handleWheel, { passive: false });
+            window.addEventListener('keydown', handleKeyboard);
+            
+            let touchStartY = 0;
+            window.addEventListener('touchstart', e => touchStartY = e.touches[0].clientY, {passive: true});
+            window.addEventListener('touchend', e => {
+                let touchEndY = e.changedTouches[0].clientY;
+                if (touchStartY - touchEndY > 50) nextSlide();
+                if (touchEndY - touchStartY > 50) prevSlide();
+            }, {passive: true});
+        });
+
+        function buildPagination() {
+            const container = document.getElementById('side-pagination');
+            for(let i = 0; i < totalSlides; i++) {
+                const navItem = document.createElement('div');
+                navItem.className = "dot-nav flex items-center justify-end gap-3 cursor-pointer group";
+                navItem.onclick = () => goToSlide(i);
+                navItem.innerHTML = `
+                    <p class="text-[10px] font-mono text-blue-200/50 uppercase tracking-widest group-hover:text-white">Slide 0${i+1}</p>
+                    <div class="w-2.5 h-2.5 rounded-full bg-white/20 border border-white/40 transition-all duration-300 group-hover:bg-white group-hover:scale-125" id="dot-${i}"></div>
+                `;
+                container.appendChild(navItem);
+            }
+        }
+
+        function updatePaginationUI() {
+            for(let i = 0; i < totalSlides; i++) {
+                const dot = document.getElementById(`dot-${i}`);
+                if(dot) {
+                    if(i === activeIndex) {
+                        dot.className = "w-2.5 h-2.5 rounded-full bg-gradient-to-r from-blue-500 to-green-500 scale-150 shadow-[0_0_10px_rgba(34,197,94,0.6)]";
+                    } else {
+                        dot.className = "w-2.5 h-2.5 rounded-full bg-white/20 border border-white/40";
+                    }
+                }
+            }
+        }
+
+        function handleWheel(e) {
+            e.preventDefault();
+            if (isTransitioning) return;
+            if (e.deltaY > 0) nextSlide();
+            else prevSlide();
+        }
+
+        function handleKeyboard(e) {
+            if (isTransitioning) return;
+            if (e.key === 'ArrowDown' || e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') prevSlide();
+        }
+
+        function nextSlide() {
+            if (activeIndex < totalSlides - 1) goToSlide(activeIndex + 1);
+        }
+
+        function prevSlide() {
+            if (activeIndex > 0) goToSlide(activeIndex - 1);
+        }
+
+        function goToSlide(index) {
+            if (isTransitioning) return;
+            isTransitioning = true;
+
+            const currentSlide = document.getElementById(`slide-${activeIndex}`);
+            const nextSlide = document.getElementById(`slide-${index}`);
+
+            const tl = gsap.timeline({
+                onComplete: () => {
+                    activeIndex = index;
+                    isTransitioning = false;
+                    updatePaginationUI();
+                }
+            });
+
+            if (currentSlide) {
+                tl.to(currentSlide, { opacity: 0, y: -20, duration: 0.4, onComplete: () => gsap.set(currentSlide, { visibility: 'hidden' }) });
+            }
+
+            if (phoneGroup) {
+                const isMobile = window.innerWidth < 1024;
+                
+                const targetX = isMobile ? 0 : baseConfig.px;
+                const targetY = isMobile ? (baseConfig.py - 2.5) : baseConfig.py;
+                const targetZ = isMobile ? (baseConfig.pz - 2.0) : baseConfig.pz;
+
+                gsap.to(phoneGroup.position, { x: targetX, y: targetY, z: targetZ, duration: 0.9, ease: 'power2.inOut' });
+
+                if (index !== activeIndex) {
+                    const diff = index - activeIndex; 
+                    spinCount -= diff; 
+                    
+                    const targetRy = baseConfig.ry + (spinCount * Math.PI * 2);
+
+                    gsap.to(phoneGroup.rotation, {
+                        x: baseConfig.rx, 
+                        y: targetRy, 
+                        z: baseConfig.rz,
+                        duration: 1.2, 
+                        ease: 'power2.inOut'
+                    });
+                } else {
+                    gsap.to(phoneGroup.rotation, { x: baseConfig.rx, y: baseConfig.ry, z: baseConfig.rz, duration: 0.9, ease: 'power2.out' });
+                }
+            }
+
+            tl.set(nextSlide, { visibility: 'visible' })
+              .to(nextSlide, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, "-=0.3");
+        }
+
+        function createRoundedRectShape(width, height, radius) {
+            const shape = new THREE.Shape();
+            const x = -width / 2; const y = -height / 2;
+            shape.moveTo(x + radius, y); shape.lineTo(x + width - radius, y); shape.quadraticCurveTo(x + width, y, x + width, y + radius);
+            shape.lineTo(x + width, y + height - radius); shape.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            shape.lineTo(x + radius, y + height); shape.quadraticCurveTo(x, y + height, x, y + height - radius);
+            shape.lineTo(x, y + radius); shape.quadraticCurveTo(x, y, x + radius, y);
+            return shape;
+        }
+
+        function initThreeJS() {
+            const container = document.getElementById('webgl-container');
+            scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0x050b14, 0.04);
+
+            camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 0.1, 100);
+            camera.position.z = 12;
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.outputEncoding = THREE.sRGBEncoding;
+            container.appendChild(renderer.domElement);
+
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.4); scene.add(ambientLight);
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1.2); directionalLight.position.set(5, 8, 5); scene.add(directionalLight);
+
+            const pointLightBlue = new THREE.PointLight(0x3b82f6, 4, 15); pointLightBlue.position.set(4, 4, 4); scene.add(pointLightBlue);
+            const pointLightGreen = new THREE.PointLight(0x22c55e, 4, 15); pointLightGreen.position.set(-4, -4, 4); scene.add(pointLightGreen);
+
+            phoneGroup = new THREE.Group(); 
+            scene.add(phoneGroup);
+
+            const pWidth = 3.1; const pHeight = 6.4; const pDepth = 0.3; const radius = 0.45;
+            const bodyShape = createRoundedRectShape(pWidth, pHeight, radius);
+            const extrudeSettings = { depth: pDepth, bevelEnabled: true, bevelSegments: 4, steps: 1, bevelSize: 0.03, bevelThickness: 0.03 };
+            const bodyGeometry = new THREE.ExtrudeGeometry(bodyShape, extrudeSettings);
+            bodyGeometry.center();
+            const bodyMaterial = new THREE.MeshStandardMaterial({ color: 0x0f0f11, metalness: 0.85, roughness: 0.2 });
+            const phoneBody = new THREE.Mesh(bodyGeometry, bodyMaterial);
+            phoneGroup.add(phoneBody);
+
+            const camBumpGeom = new THREE.ExtrudeGeometry(createRoundedRectShape(1.2, 1.3, 0.3), { depth: 0.08, bevelEnabled: true, bevelThickness: 0.02, bevelSize: 0.02, bevelSegments: 2 });
+            const camBump = new THREE.Mesh(camBumpGeom, new THREE.MeshStandardMaterial({ color: 0x1a1a1a, metalness: 0.9, roughness: 0.1 }));
+            camBump.position.set(-pWidth/2 + 0.8, pHeight/2 - 0.85, -pDepth/2 - 0.08);
+            phoneGroup.add(camBump);
+            
+            const lensGeom = new THREE.CylinderGeometry(0.25, 0.25, 0.1, 32);
+            const lensMat = new THREE.MeshStandardMaterial({ color: 0x050505, metalness: 1.0, roughness: 0.0 });
+            const lens1 = new THREE.Mesh(lensGeom, lensMat); lens1.rotation.x = Math.PI / 2; lens1.position.set(0, 0.25, -0.05); camBump.add(lens1);
+            const lens2 = new THREE.Mesh(lensGeom, lensMat); lens2.rotation.x = Math.PI / 2; lens2.position.set(0, -0.35, -0.05); camBump.add(lens2);
+
+            const screenWidth = pWidth - 0.12; const screenHeight = pHeight - 0.12; const screenRadius = radius - 0.04;
+            const screenShape = createRoundedRectShape(screenWidth, screenHeight, screenRadius);
+            const screenGeom = new THREE.ShapeGeometry(screenShape);
+
+            const pos = screenGeom.attributes.position;
+            const uvs = screenGeom.attributes.uv;
+            for (let i = 0; i < pos.count; i++) {
+                const x = pos.getX(i); const y = pos.getY(i);
+                const u = (x + screenWidth / 2) / screenWidth;
+                const v = (y + screenHeight / 2) / screenHeight;
+                uvs.setXY(i, u, v);
+            }
+
+            let screenMaterial;
+            if (useVideo) {
+                const video = document.createElement('video');
+                video.src = appVideoUrl; video.crossOrigin = 'anonymous';
+                video.loop = true; video.muted = true; video.playsInline = true;
+                video.play().catch(e => console.log(e));
+                const videoTexture = new THREE.VideoTexture(video);
+                videoTexture.encoding = THREE.sRGBEncoding;
+                screenMaterial = new THREE.MeshBasicMaterial({ map: videoTexture });
+            } else {
+                screenMaterial = createTechFallbackTexture();
+            }
+
+            const phoneScreen = new THREE.Mesh(screenGeom, screenMaterial);
+            phoneScreen.position.z = (pDepth / 2) + 0.035;
+            phoneGroup.add(phoneScreen);
+
+            const clock = new THREE.Clock();
+            function renderLoop() {
+                requestAnimationFrame(renderLoop);
+                const elapsed = clock.getElapsedTime();
+                
+                if (phoneGroup && !isTransitioning) {
+                    phoneGroup.position.y += Math.sin(elapsed * 1.5) * 0.0015;
+                    phoneGroup.rotation.y += Math.cos(elapsed * 0.5) * 0.0008;
+                }
+                renderer.render(scene, camera);
+            }
+            renderLoop();
+
+            window.addEventListener('resize', () => {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+                goToSlide(activeIndex);
+            });
+        }
+
+        function createTechFallbackTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 512; canvas.height = 1024;
+            const ctx = canvas.getContext('2d');
+            const grad = ctx.createLinearGradient(0, 0, 0, 1024);
+            grad.addColorStop(0, '#0a0f24'); grad.addColorStop(0.5, '#051910'); grad.addColorStop(1, '#020205');
+            ctx.fillStyle = grad; ctx.fillRect(0, 0, 512, 1024);
+            ctx.strokeStyle = 'rgba(59, 130, 246, 0.15)'; ctx.lineWidth = 1;
+            for(let i=0; i<512; i+=40) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, 1024); ctx.stroke(); }
+            for(let j=0; j<1024; j+=40) { ctx.beginPath(); ctx.moveTo(0, j); ctx.lineTo(512, j); ctx.stroke(); }
+            ctx.fillStyle = '#ffffff'; ctx.font = 'bold 36px "Plus Jakarta Sans", sans-serif'; ctx.fillText('WeDo', 40, 90);
+            const texture = new THREE.CanvasTexture(canvas);
+            texture.encoding = THREE.sRGBEncoding;
+            return new THREE.MeshBasicMaterial({ map: texture });
+        }
+    </script>
+</body>
+</html>
